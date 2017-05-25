@@ -21,23 +21,15 @@ namespace Acando.AspNet.NodeServices
         /// Creates a new instance of <see cref="NodeServicesOptions"/>.
         /// </summary>
         /// <param name="serviceProvider">The <see cref="IServiceProvider"/>.</param>
-        public NodeServicesOptions(ILog logger)
+        public NodeServicesOptions(ILog logger, string projectPath, string node_env = "development")
         {
-            
-
             EnvironmentVariables = new Dictionary<string, string>();
             InvocationTimeoutMilliseconds = DefaultInvocationTimeoutMilliseconds;
             WatchFileExtensions = (string[])DefaultWatchFileExtensions.Clone();
-
-            // In an ASP.NET environment, we can use the IHostingEnvironment data to auto-populate a few
-            // things that you'd otherwise have to specify manually
-            //var hostEnv = serviceProvider.GetService<IHostingEnvironment>();
-            //if (hostEnv != null)
-            //{
-            ProjectPath = @"C:\nodeservices-test\NodeServicesTest";
-            EnvironmentVariables["NODE_ENV"] = "development"; // De-facto standard values for Node
-            //}
-
+            
+            ProjectPath = projectPath;
+            EnvironmentVariables["NODE_ENV"] = node_env; // De-facto standard values for Node
+            
             // If the DI system gives us a logger, use it. Otherwise, set up a default one.
             //var loggerFactory = serviceProvider.GetService<ILogFactory>();
             //NodeInstanceOutputLogger = loggerFactory != null

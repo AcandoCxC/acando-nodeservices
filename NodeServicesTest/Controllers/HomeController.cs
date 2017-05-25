@@ -18,7 +18,7 @@ namespace NodeServicesTest.Controllers
         
         public async Task<ActionResult> Index()
         {
-            var node = NodeServicesFactory.CreateNodeServices(new NodeServicesOptions(logger));
+            var node = NodeServicesFactory.CreateNodeServices(new NodeServicesOptions(logger, Server.MapPath("./")));
             var result = await node.InvokeAsync<string>("./app.server", "Server render me, biatch");
 
             return Json(result, JsonRequestBehavior.AllowGet);

@@ -227,7 +227,7 @@ namespace Acando.AspNet.NodeServices.HostingModels
             }
 
             var thisProcessPid = Process.GetCurrentProcess().Id;
-            var startInfo = new ProcessStartInfo(@"c:\program files\nodejs\node")
+            var startInfo = new ProcessStartInfo("node")
             {
                 Arguments = $"{debuggingArgs}\"{entryPointFilename}\" --parentPid {thisProcessPid} {commandLineArguments ?? string.Empty}",
                 UseShellExecute = false,
