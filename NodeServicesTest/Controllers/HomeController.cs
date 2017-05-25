@@ -11,6 +11,20 @@ namespace NodeServicesTest.Controllers
     using log4net;
     using log4net.Core;
 
+    public class ReactResult : ActionResult
+    {
+        private string Data { get; }
+
+        public ReactResult(string data)
+        {
+            Data = data;
+        }
+        public override void ExecuteResult(ControllerContext context)
+        {
+            context.HttpContext.Response.Write(Data);
+        }
+    }
+
     public class HomeController : Controller
     {
         private static readonly ILog logger = 
@@ -21,7 +35,7 @@ namespace NodeServicesTest.Controllers
             var node = NodeServicesFactory.CreateNodeServices(new NodeServicesOptions(logger, Server.MapPath("./")));
             var result = await node.InvokeAsync<string>("./app.server", "Server render me, biatch");
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return new ReactResult(result);
         }
 
         public ActionResult About()
