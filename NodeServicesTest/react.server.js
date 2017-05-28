@@ -5,7 +5,11 @@
 
 // require('babel-core/register')
 // you can also try uncommenting babel-core/register and use, its the same thing
-// require('babel-register')
+require("babel-register")({
+    // Setting this to false will disable the cache.
+    cache: false
+});
+
 require('babel-polyfill')
 
 const path = require('path')

@@ -29,7 +29,8 @@ namespace Acando.AspNet.NodeServices
             
             ProjectPath = projectPath;
             EnvironmentVariables["NODE_ENV"] = node_env; // De-facto standard values for Node
-            
+            EnvironmentVariables["BABEL_DISABLE_CACHE"] = "true";
+
             // If the DI system gives us a logger, use it. Otherwise, set up a default one.
             //var loggerFactory = serviceProvider.GetService<ILogFactory>();
             //NodeInstanceOutputLogger = loggerFactory != null
