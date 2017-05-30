@@ -30,6 +30,11 @@ namespace Acando.AspNet.NodeServices
             ProjectPath = projectPath;
             EnvironmentVariables["NODE_ENV"] = node_env; // De-facto standard values for Node
             
+            // TODO: Fix this, we shouldn't need to disable the cache, just move the path.
+            EnvironmentVariables["BABEL_DISABLE_CACHE"] = "true";
+            // TODO: Move this to appsettings? This might have to be set in Azure App Settings instead.
+            EnvironmentVariables["WEBSITE_NODE_DEFAULT_VERSION"] = "7.10.0";
+
             // If the DI system gives us a logger, use it. Otherwise, set up a default one.
             //var loggerFactory = serviceProvider.GetService<ILogFactory>();
             //NodeInstanceOutputLogger = loggerFactory != null
