@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -229,8 +230,7 @@
             }
 
             var thisProcessPid = Process.GetCurrentProcess().Id;
-            var startInfo = new ProcessStartInfo("node")
-            //var startInfo = new ProcessStartInfo(@"C:\node\node64")
+            var startInfo = new ProcessStartInfo(ConfigurationManager.AppSettings["NodePath"] ?? "node")
             {
                 Arguments = $"{debuggingArgs}\"{entryPointFilename}\" --parentPid {thisProcessPid} {commandLineArguments ?? string.Empty}",
                 UseShellExecute = false,
@@ -345,7 +345,8 @@
                 var message = "Failed to start Node process. To resolve this:.\n\n"
                             + "[1] Ensure that Node.js is installed and can be found in one of the PATH directories.\n"
                             + $"    Current PATH enviroment variable is: { Environment.GetEnvironmentVariable("PATH") }\n"
-                            + "    Make sure the Node executable is in one of those directories, or update your PATH.\n\n"
+                            + "    Make sure the Node executable is in one of those directories, or update your PATH.\n"
+                            + "   Alternatively, set the appsetting NodePath to your nodejs path.\n\n"
                             + "[2] See the InnerException for further details of the cause.\n\n"
                             + $"[3] StartInfo was {JsonConvert.SerializeObject(startInfo)}";
                 throw new InvalidOperationException(message, ex);

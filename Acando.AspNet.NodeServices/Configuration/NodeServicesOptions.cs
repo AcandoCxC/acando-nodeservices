@@ -25,8 +25,14 @@ namespace Acando.AspNet.NodeServices.Configuration
         /// <param name="projectPath">Path to the project</param>
         public NodeServicesOptions(string projectPath)
         {
+            int settingInvocation = 0;
+            if (int.TryParse(ConfigurationManager.AppSettings["NodeDefaultInvocationTimeoutMilliseconds"], out settingInvocation) == false)
+            {
+                settingInvocation = DefaultInvocationTimeoutMilliseconds;
+            }
+
             EnvironmentVariables = new Dictionary<string, string>();
-            InvocationTimeoutMilliseconds = DefaultInvocationTimeoutMilliseconds;
+            InvocationTimeoutMilliseconds = settingInvocation;
             WatchFileExtensions = (string[])DefaultWatchFileExtensions.Clone();
             
             ProjectPath = projectPath;
