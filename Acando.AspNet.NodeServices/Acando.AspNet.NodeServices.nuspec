@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Acando.AspNet.NodeServices</id>
-    <version>0.0.1</version>
+    <version>$version$</version>
     <title>Acando.AspNet.NodeServices</title>
     <authors>Tobias Barlind</authors>
     <owners>Tobias Barlind</owners>

@@ -3,6 +3,7 @@ namespace Acando.AspNet.NodeServices.Configuration
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using HostingModels;
     using log4net;
 
@@ -16,33 +17,25 @@ namespace Acando.AspNet.NodeServices.Configuration
         private const string LogCategoryName = "Acando.AspNet.NodeServices";
         private static readonly string[] DefaultWatchFileExtensions = { ".js", ".jsx", ".ts", ".tsx", ".json", ".html" };
 
-        private static ILog logger = LogManager.GetLogger("Nodeservices");
+        private static readonly ILog Logger = LogManager.GetLogger(LogCategoryName);
 
         /// <summary>
         /// Creates a new instance of <see cref="NodeServicesOptions"/>.
         /// </summary>
-        /// <param name="serviceProvider">The <see cref="IServiceProvider"/>.</param>
-        public NodeServicesOptions(string projectPath, string node_env = "development")
+        /// <param name="projectPath">Path to the project</param>
+        public NodeServicesOptions(string projectPath)
         {
             EnvironmentVariables = new Dictionary<string, string>();
             InvocationTimeoutMilliseconds = DefaultInvocationTimeoutMilliseconds;
             WatchFileExtensions = (string[])DefaultWatchFileExtensions.Clone();
             
             ProjectPath = projectPath;
-            EnvironmentVariables["NODE_ENV"] = node_env; // De-facto standard values for Node
 
-            // TODO: Fix this, we shouldn't need to disable the cache, just move the path.
-            EnvironmentVariables["BABEL_DISABLE_CACHE"] = "true";
-            // TODO: Move this to appsettings?
-            EnvironmentVariables["WEBSITE_NODE_DEFAULT_VERSION"] = "7.10.0";
+            EnvironmentVariables["NODE_ENV"] = ConfigurationManager.AppSettings["node_env"] ?? "development"; // De-facto standard values for Node
+            EnvironmentVariables["BABEL_CACHE_PATH"] = ConfigurationManager.AppSettings["BABEL_CACHE_PATH"] ?? projectPath + "../babel.json";
+            EnvironmentVariables["WEBSITE_NODE_DEFAULT_VERSION"] = ConfigurationManager.AppSettings["WEBSITE_NODE_DEFAULT_VERSION"] ?? "8.1.1";
             
-            // If the DI system gives us a logger, use it. Otherwise, set up a default one.
-            //var loggerFactory = serviceProvider.GetService<ILogFactory>();
-            //NodeInstanceOutputLogger = loggerFactory != null
-            //    ? loggerFactory.CreateLogger(LogCategoryName)
-            //    : new ConsoleLogger(LogCategoryName, null, false);
-
-            NodeInstanceOutputLogger = logger;
+            NodeInstanceOutputLogger = Logger;
 
             // By default, we use this package's built-in out-of-process-via-HTTP hosting/transport
             this.UseHttpHosting();
