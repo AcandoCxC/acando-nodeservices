@@ -7,6 +7,12 @@ Requirements
 -------------------------
 Install node.js - REBOOT
 
+Installation
+-------------------------
+Install from nuget.
+
+`Install-Package Acando.AspNet.NodeServices`
+
 Configuration
 -------------------------
 There are a few appsettings you can add in your web app (but everything should work without them):
