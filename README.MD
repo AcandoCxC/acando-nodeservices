@@ -3,6 +3,8 @@ Acando.AspNet.NodeServices
 
 This is a fork of [Microsoft.AspNetCore.NodeServices](https://github.com/aspnet/JavaScriptServices/tree/dev/src/Microsoft.AspNetCore.NodeServices) with the intention of making if work for non-Core AspNet.
 
+Majority of changes are adding appsettings configurations, using ILog for logging and removing some dependencies on AspNetCore.HostingModels.
+
 Requirements
 -------------------------
 Install node.js - REBOOT
@@ -28,3 +30,5 @@ There are a few appsettings you can add in your web app (but everything should w
   * `<add key="WEBSITE_NODE_DEFAULT_VERSION" value="8.1.1" />`   
 * `NodePath` - Sets the path to node.exe; defaults to "node" which assumes it's in the path.
   * `<add key="NodePath" value="c:\Program Files\nodejs\node" />`   
+* `NodeServices.NODE_PATH` - The path to your client app. Defaults to `React`. 
+  * `<add key="NodeServices.NODE_PATH" value="OtherPath" />`  

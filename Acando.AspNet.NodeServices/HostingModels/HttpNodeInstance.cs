@@ -51,6 +51,7 @@
                 options.DebuggingPort)
         {
             _client = new HttpClient();
+            _client.Timeout = TimeSpan.FromMilliseconds(options.InvocationTimeoutMilliseconds + 1000);
         }
 
         private static string MakeCommandLineOptions(int port)
@@ -68,13 +69,13 @@
             if (!response.IsSuccessStatusCode)
             {
                 // Unfortunately there's no true way to cancel ReadAsStringAsync calls, hence AbandonIfCancelled
-                var responseErrorString = await response.Content.ReadAsStringAsync().OrThrowOnCancellation(cancellationToken);
-                throw new Exception("Call to Node module failed with error: " + responseErrorString);
+                var responseJson = await response.Content.ReadAsStringAsync().OrThrowOnCancellation(cancellationToken);
+                var responseError = JsonConvert.DeserializeObject<RpcJsonResponse>(responseJson, jsonSerializerSettings);
+
+                throw new NodeInvocationException(responseError.ErrorMessage, responseError.ErrorDetails);
             }
 
             var responseContentType = response.Content.Headers.ContentType;
-            string responseJson = "";
-
             switch (responseContentType.MediaType)
             {
                 case "text/plain":
@@ -90,16 +91,9 @@
                     return (T)(object)responseString;
 
                 case "application/json":
-                    try
-                    {
-                        responseJson = await response.Content.ReadAsStringAsync().OrThrowOnCancellation(cancellationToken);
-                        return JsonConvert.DeserializeObject<T>(responseJson, jsonSerializerSettings);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception("Error deserializing +" + responseJson, e);
-                    }
-
+                    var responseJson = await response.Content.ReadAsStringAsync().OrThrowOnCancellation(cancellationToken);
+                    return JsonConvert.DeserializeObject<T>(responseJson, jsonSerializerSettings);
+                    
                 case "application/octet-stream":
                     // Streamed responses have to be received as System.IO.Stream instances
                     if (typeof(T) != typeof(Stream) && typeof(T) != typeof(object))
@@ -146,5 +140,13 @@
                 _disposed = true;
             }
         }
+
+#pragma warning disable 649 // These properties are populated via JSON deserialization
+        private class RpcJsonResponse
+        {
+            public string ErrorMessage { get; set; }
+            public string ErrorDetails { get; set; }
+        }
+#pragma warning restore 649
     }
 }

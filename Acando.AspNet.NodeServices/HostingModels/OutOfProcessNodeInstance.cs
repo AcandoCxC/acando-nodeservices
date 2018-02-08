@@ -253,20 +253,10 @@
                 }
             }
 
-            // Append projectPath to NODE_PATH so it can locate node_modules
-            var existingNodePath = Environment.GetEnvironmentVariable("NODE_PATH") ?? string.Empty;
-            if (existingNodePath != string.Empty)
-            {
-                existingNodePath += Path.PathSeparator;
-            }
-
-            var nodePathValue = existingNodePath + Path.Combine(projectPath ?? "", "node_modules");
-            // the old way
-            // SetEnvironmentVariable(startInfo, "NODE_PATH", nodePathValue);
-            // Set NODE_PATH to /React to enable the import 'component/MyComponent' pattern
-            SetEnvironmentVariable(startInfo, "NODE_PATH", "React");
-            // this could probably be rewritten in a much smarter way
-
+            // Set NODE_PATH to /React to enable the import 'component/MyComponent' pattern 
+            var nodePath = ConfigurationManager.AppSettings["NodeServices.NODE_PATH"] ?? "React";
+            SetEnvironmentVariable(startInfo, "NODE_PATH", nodePath);
+            
             return startInfo;
         }
 
@@ -304,7 +294,7 @@
 
                 // Make sure the Node process is finished
                 // TODO: Is there a more graceful way to end it? Or does this still let it perform any cleanup?
-                if (!_nodeProcess.HasExited)
+                if (_nodeProcess != null && !_nodeProcess.HasExited)
                 {
                     _nodeProcess.Kill();
                 }
@@ -324,12 +314,13 @@
 
         private static void SetEnvironmentVariable(ProcessStartInfo startInfo, string name, string value)
         {
-            startInfo.EnvironmentVariables[name] = value;
+            startInfo.Environment[name] = value;
         }
 
         private static Process LaunchNodeProcess(ProcessStartInfo startInfo)
         {
-            try {
+            try
+            {
                 var process = Process.Start(startInfo);
 
                 // On Mac at least, a killed child process is left open as a zombie until the parent

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Acando.AspNet.NodeServices</RootNamespace>
     <AssemblyName>Acando.AspNet.NodeServices</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -34,8 +34,9 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\..\P12\seller-center\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\..\P12\seller-center\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -50,7 +51,6 @@
   <ItemGroup>
     <Compile Include="Configuration\NodeServicesFactory.cs" />
     <Compile Include="Configuration\NodeServicesOptions.cs" />
-    <Compile Include="Configuration\NodeServicesServiceCollectionExtensions.cs" />
     <Compile Include="HostingModels\HttpNodeInstance.cs" />
     <Compile Include="HostingModels\INodeInstance.cs" />
     <Compile Include="HostingModels\NodeInvocationException.cs" />
